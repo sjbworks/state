@@ -6,10 +6,10 @@ type User = {
 
 export const user = {
   namespace: "user",
-  user: {
+  state: {
     id: "",
     name: "",
     email: "",
   },
-  reducer: { set: (state: User) => ({ ...state }) },
+  reducer: { user: (state: User) => ({ ...state }) },
 } as const;

@@ -5,7 +5,7 @@ type Snackbar = {
 
 export const snackbar = {
   namespace: "snackbar",
-  snackbar: {
+  state: {
     message: "",
     isError: false,
   },
