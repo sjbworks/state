@@ -5,11 +5,11 @@ type User = {
 };
 
 export const user = {
-  namespace: "user",
+  namespace: "user" as const,
   state: {
     id: "",
     name: "",
     email: "",
   },
-  reducer: { user: (state: User) => ({ ...state }) },
+  reducer: { user: (state: User, payload: User) => ({ ...state, ...payload }) },
 } as const;

@@ -4,10 +4,15 @@ type Snackbar = {
 };
 
 export const snackbar = {
-  namespace: "snackbar",
+  namespace: "snackbar" as const,
   state: {
     message: "",
     isError: false,
   },
-  reducer: { set: (state: Snackbar) => ({ ...state }) },
+  reducer: {
+    snackbar: (state: Snackbar, payload: Snackbar) => ({
+      ...state,
+      ...payload,
+    }),
+  },
 } as const;
