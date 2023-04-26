@@ -1,12 +1,12 @@
 import React, { createContext, useReducer, ReactNode } from "react";
 import { defaultValue, reducers, states } from "./states";
-import type { NameSpaces, State } from "./type";
+import type { NameSpaces, State, ReducersType } from "./type";
 
 const reducer = <T extends NameSpaces>(
   state: State[keyof State],
   namespace: keyof State
-) => {
-  return reducers[namespace](state);
+): ReducersType<T> => {
+  return reducers(state);
 };
 
 type Props = {

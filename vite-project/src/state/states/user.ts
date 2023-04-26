@@ -10,6 +10,6 @@ export const user = {
     id: "",
     name: "",
     email: "",
-  },
-  reducer: { user: (state: User, payload: User) => ({ ...state, ...payload }) },
+  } as User,
+  reducer: (state: User, payload: User) => ({ ...state, ...payload }),
 } as const;

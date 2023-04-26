@@ -8,11 +8,9 @@ export const snackbar = {
   state: {
     message: "",
     isError: false,
-  },
-  reducer: {
-    snackbar: (state: Snackbar, payload: Snackbar) => ({
-      ...state,
-      ...payload,
-    }),
-  },
+  } as Snackbar,
+  reducer: (state: Snackbar, payload: Snackbar) => ({
+    ...state,
+    ...payload,
+  }),
 } as const;

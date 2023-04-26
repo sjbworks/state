@@ -1,8 +1,9 @@
 import { snackbar } from "./snackbar";
 import { user } from "./user";
+import { States, ReducersType } from "../type";
 
 export const states = { snackbar, user };
-type States = typeof states;
+
 export const namespaces = Object.keys(states).map(
   (key) => states[key as keyof States]["namespace"]
 );
