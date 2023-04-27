@@ -1,33 +1,15 @@
-import { namespaces, states } from "../states";
-import { snackbar } from "../states/snackbar";
-import { user } from "../states/user";
+import { states } from "../states";
 
-type GlobalStateArgs = {
-  namespace: string | string[];
+export type Modules = typeof states;
+// type States = typeof states.snackbar.state & typeof states.user.state;
+export type NameSpace = keyof Modules;
+export type States<T extends NameSpace> = Modules[T]["state"];
+export type State<T extends NameSpace> = { [key in T]: Modules[T]["state"] };
+
+export type Reducer<T> = (state: T, payload: Partial<T>) => T;
+export type Reducers = {
+  [key: string]: Reducer<any>;
 };
-
-type GlobalStateReturnType = {
-  state: string;
-};
-
-const module = { snackbar, user };
-
-export type NameSpaces = (typeof namespaces)[number];
-export type State = {
-  [k in (typeof namespaces)[number]]: (typeof module)[k];
-};
-
-export type States = typeof states;
-export type NameSpaceType = keyof States;
-export type DefaultValueType<T extends NameSpaceType> = States[T]["state"];
-// export type ReducerType<T extends NameSpaceType> = States[T]["reducer"];
-// export type ReducersType<T extends NameSpaceType> = {
-//   [Key in keyof States]: (
-//     state: States[Key]["state"],
-//     payload: any
-//   ) => States[Key]["state"];
+// export type ReducersType<T extends NameSpace> = {
+//   [k in NameSpace]: Reducer<T>;
 // };
-export type ReducersType<T extends NameSpaceType> = (
-  state: States[T]["state"],
-  payload: T
-) => States[T]["state"];
