@@ -1,14 +1,6 @@
-import React, { createContext, useReducer, ReactNode, useContext } from "react";
+import React, { createContext, useReducer, useContext } from "react";
 import { initialValues, reducers } from "./states";
-import type { Modules, State, States, NameSpace, Reducers } from "./type";
-
-type Props = {
-  children?: ReactNode;
-};
-
-const GlobalStateContext = createContext<Modules[keyof Modules]>(
-  {} as Modules[keyof Modules]
-);
+import type { State, States, NameSpace, Reducers } from "./type";
 
 type Action = {
   namespace: NameSpace;
@@ -21,24 +13,47 @@ type ContextType = {
   dispatch: React.Dispatch<Action>;
 };
 
+type GlobalStateProviderProps = {
+  children: React.ReactNode;
+};
+
+const reducer = (state: State<NameSpace>, action: Action): State<NameSpace> => {
+  const { namespace, payload, reducer } = action;
+  return {
+    ...state,
+    [namespace]: reducer(state[namespace], payload),
+  };
+};
+
 const AppContext = createContext<ContextType>({
   state: initialValues,
   dispatch: () => null,
 });
 
-const useGlobalState = <T extends NameSpace>(key: T) => {
-  const { state, dispatch } = useContext(AppContext);
-  const setState = (payload: Partial<States[T]>) => {};
-
-  return reducers[key];
-};
-
-export const GlobalStateProvider = ({ children }: Props) => {
-  const [state, dispatch] = useReducer(reducer, defaultValue);
+export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
+  children,
+}: GlobalStateProviderProps) => {
+  const [state, dispatch] = useReducer(reducer, initialValues);
 
   return (
-    <GlobalStateContext.Provider value={{ state, dispatch }}>
+    <AppContext.Provider value={{ state, dispatch }}>
       {children}
-    </GlobalStateContext.Provider>
+    </AppContext.Provider>
   );
+};
+
+export const useGlobalState = <T extends NameSpace>(
+  namespace: T
+): [States<T>, (payload: Partial<States<T>>) => void] => {
+  const { state, dispatch } = useContext(AppContext);
+
+  const setState = (payload: Partial<States<T>>) => {
+    dispatch({
+      namespace,
+      payload,
+      reducer: reducers[namespace],
+    });
+  };
+
+  return [state[namespace], setState];
 };
