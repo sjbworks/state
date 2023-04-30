@@ -1,10 +1,10 @@
-import React, { createContext, useReducer, useContext } from "react";
+import React, { createContext, useReducer, ReactNode, useContext } from "react";
 import { initialValues, reducers } from "./states";
 import type { State, States, NameSpace, Reducers } from "./type";
 
 type Action = {
   namespace: NameSpace;
-  payload: Partial<States<NameSpace>>;
+  payload: Partial<States<NameSpace>[NameSpace]>;
   reducer: Reducers[NameSpace];
 };
 
@@ -42,12 +42,13 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
   );
 };
 
-export const useGlobalState = <T extends NameSpace>(
+// Hook
+const useGlobalState = <T extends NameSpace>(
   namespace: T
-): [States<T>, (payload: Partial<States<T>>) => void] => {
+): [States<T>[T], (payload: Partial<States<T>[T]>) => void] => {
   const { state, dispatch } = useContext(AppContext);
 
-  const setState = (payload: Partial<States<T>>) => {
+  const setState = (payload: Partial<States<T>[T]>) => {
     dispatch({
       namespace,
       payload,

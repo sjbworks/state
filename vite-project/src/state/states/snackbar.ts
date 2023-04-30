@@ -1,4 +1,4 @@
-type Snackbar = {
+export type Snackbar = {
   message: string;
   isError: boolean;
 };
