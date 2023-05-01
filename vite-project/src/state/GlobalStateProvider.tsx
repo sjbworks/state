@@ -1,65 +1,61 @@
-import React, { createContext, useReducer, ReactNode, useContext } from "react";
-import { initialValues, reducers } from "./states";
-import type { States, NameSpace, Reducers } from "./type";
+import { useReducer } from "react";
+import { GlobalStateContext, Action, AnyAction } from "./GlobalStateContext";
+import { snackbar, user, states, States, NameSpace } from "./states";
+import { GlobalStateWithDispatch } from "./GlobalStateContext";
 
-type Action<T extends NameSpace> = {
-  namespace: NameSpace;
-  payload: Partial<States[T]>;
-  reducer: Reducers[T];
+type Reducer<S, A> = (state: S, action: A) => S;
+
+type ReducersMapObject<S, A extends Action = AnyAction> = {
+  [K in keyof S]: Reducer<S[K], A>;
 };
 
-type ContextType = {
-  state: States;
-  dispatch: React.Dispatch<Action<NameSpace>>;
+type ReducerFromReducersMapObject<M extends ReducersMapObject<any, any>> = (
+  state: { [K in keyof M]: ReturnType<M[K]> },
+  action: Parameters<M[keyof M]>[1]
+) => { [K in keyof M]: ReturnType<M[K]> };
+
+const reducers = {
+  snackbar: snackbar.reducer,
+  user: user.reducer,
+};
+
+function combineReducers<M extends ReducersMapObject<any, any>>(
+  reducers: M
+): ReducerFromReducersMapObject<M> {
+  return (state, action) => {
+    return Object.keys(reducers).reduce((nextState, key) => {
+      const reducer = reducers[key as keyof M];
+      nextState[key as keyof M] = reducer(state[key as keyof M], action);
+      return nextState;
+    }, {} as { [K in keyof M]: ReturnType<M[K]> });
+  };
+}
+
+type GlobalState = {
+  [K in NameSpace]: States[K]["state"];
+};
+
+const initialState: GlobalState = {
+  snackbar: states.snackbar.state,
+  user: states.user.state,
 };
 
 type GlobalStateProviderProps = {
   children: React.ReactNode;
 };
 
-const reducer = <T extends NameSpace>(
-  state: States[T],
-  action: Action<T>
-): States[T] => {
-  const { namespace, payload, reducer } = action;
-  return {
-    ...state,
-    [namespace]: reducer(state, payload),
-  };
-};
-
-const AppContext = createContext<ContextType>({
-  state: initialValues,
-  dispatch: () => null,
-});
-
-export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = <
-  T extends NameSpace
->({
+export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
   children,
 }: GlobalStateProviderProps) => {
-  const [state, dispatch] = useReducer(reducer, initialValues);
+  const [state, dispatch] = useReducer(combineReducers(reducers), initialState);
+  console.log(combineReducers(reducers));
+  console.log(state, dispatch);
 
   return (
-    <AppContext.Provider value={{ state, dispatch }}>
+    <GlobalStateContext.Provider
+      value={{ ...state, dispatch } as GlobalStateWithDispatch}
+    >
       {children}
-    </AppContext.Provider>
+    </GlobalStateContext.Provider>
   );
-};
-
-// Hook
-export const useGlobalState = <T extends NameSpace>(
-  namespace: T
-): [States[T], (payload: Partial<States[T]>) => void] => {
-  const { state, dispatch } = useContext(AppContext);
-
-  const setState = (payload: Partial<States[T]>) => {
-    dispatch({
-      namespace,
-      payload,
-      reducer: reducers[namespace],
-    });
-  };
-
-  return [state[namespace], setState];
 };

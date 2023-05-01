@@ -1,17 +1,40 @@
-import { snackbar } from "./snackbar";
-import { user } from "./user";
-import { States, Reducers, NameSpace } from "../type";
-
-export const states = { snackbar, user };
-
-export const namespaces = Object.keys(states).map(
-  (key) => states[key as NameSpace]["namespace"]
-);
-export const initialValues = {
-  snackbar: snackbar.state,
-  user: user.state,
+export type Snackbar = {
+  message: string;
+  isError: boolean;
 };
-export const reducers: Reducers = {
-  snackbar: snackbar.reducer,
-  user: user.reducer,
+
+export type User = {
+  id: string;
+  name: string;
+  email: string;
 };
+
+export const snackbar = {
+  namespace: "snackbar" as const,
+  state: {
+    message: "",
+    isError: false,
+  },
+  reducer: (state: Snackbar, payload: Snackbar) => ({
+    ...state,
+    ...payload,
+  }),
+};
+
+export const user = {
+  namespace: "user" as const,
+  state: {
+    id: "",
+    name: "",
+    email: "",
+  },
+  reducer: (state: User, payload: User) => ({ ...state, ...payload }),
+};
+
+export type States = {
+  snackbar: typeof snackbar;
+  user: typeof user;
+};
+
+export const states: States = { snackbar, user };
+export type NameSpace = "snackbar" | "user";
