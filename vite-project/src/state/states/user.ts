@@ -11,5 +11,5 @@ export const user = {
     name: "",
     email: "",
   } as User,
-  reducer: (state: User, payload: User) => ({ ...state, ...payload }),
+  reducer: (state: User, payload: Partial<User>) => ({ ...state, ...payload }),
 } as const;

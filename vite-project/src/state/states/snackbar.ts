@@ -9,7 +9,7 @@ export const snackbar = {
     message: "",
     isError: false,
   } as Snackbar,
-  reducer: (state: Snackbar, payload: Snackbar) => ({
+  reducer: (state: Snackbar, payload: Partial<Snackbar>) => ({
     ...state,
     ...payload,
   }),

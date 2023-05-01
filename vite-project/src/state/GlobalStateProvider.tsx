@@ -1,27 +1,30 @@
 import React, { createContext, useReducer, ReactNode, useContext } from "react";
 import { initialValues, reducers } from "./states";
-import type { State, States, NameSpace, Reducers } from "./type";
+import type { States, NameSpace, Reducers } from "./type";
 
-type Action = {
+type Action<T extends NameSpace> = {
   namespace: NameSpace;
-  payload: Partial<States<NameSpace>[NameSpace]>;
-  reducer: Reducers[NameSpace];
+  payload: Partial<States[T]>;
+  reducer: Reducers[T];
 };
 
 type ContextType = {
-  state: State<NameSpace>;
-  dispatch: React.Dispatch<Action>;
+  state: States;
+  dispatch: React.Dispatch<Action<NameSpace>>;
 };
 
 type GlobalStateProviderProps = {
   children: React.ReactNode;
 };
 
-const reducer = (state: State<NameSpace>, action: Action): State<NameSpace> => {
+const reducer = <T extends NameSpace>(
+  state: States[T],
+  action: Action<T>
+): States[T] => {
   const { namespace, payload, reducer } = action;
   return {
     ...state,
-    [namespace]: reducer(state[namespace], payload),
+    [namespace]: reducer(state, payload),
   };
 };
 
@@ -30,7 +33,9 @@ const AppContext = createContext<ContextType>({
   dispatch: () => null,
 });
 
-export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
+export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = <
+  T extends NameSpace
+>({
   children,
 }: GlobalStateProviderProps) => {
   const [state, dispatch] = useReducer(reducer, initialValues);
@@ -43,12 +48,12 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
 };
 
 // Hook
-const useGlobalState = <T extends NameSpace>(
+export const useGlobalState = <T extends NameSpace>(
   namespace: T
-): [States<T>[T], (payload: Partial<States<T>[T]>) => void] => {
+): [States[T], (payload: Partial<States[T]>) => void] => {
   const { state, dispatch } = useContext(AppContext);
 
-  const setState = (payload: Partial<States<T>[T]>) => {
+  const setState = (payload: Partial<States[T]>) => {
     dispatch({
       namespace,
       payload,
