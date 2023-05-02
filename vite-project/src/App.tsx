@@ -1,13 +1,11 @@
-import React, { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import React from "react";
 import "./App.css";
 import { GlobalStateProvider, useGlobalState } from "./state";
 
 function App() {
-  const [count, setCount] = useState(0);
   const [snackbar, dispatch] = useGlobalState("snackbar");
-  dispatch({ isError: false, message: "yay" });
+  dispatch({ isError: false, message: "yay" }, "snackbar");
+  console.log(dispatch);
   console.log(snackbar);
 
   return (

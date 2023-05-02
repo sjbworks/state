@@ -1,5 +1,5 @@
 import { createContext, Dispatch } from "react";
-import { States, states, User, Snackbar, NameSpace } from "./states";
+import { States, User, Snackbar, NameSpace } from "./states";
 
 export type Action<T extends string = string, P = any> = {
   type: T;
@@ -12,9 +12,10 @@ type GlobalState = {
   [K in NameSpace]: States[K]["state"];
 };
 
-const initialState: GlobalState = {
+const initialState: GlobalStateWithDispatch = {
   snackbar: { message: "", isError: false },
   user: { id: "", name: "", email: "" },
+  dispatch: () => {},
 };
 
 export type GlobalStateWithDispatch = GlobalState & {
