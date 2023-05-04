@@ -1,6 +1,6 @@
 import { useContext, Dispatch } from "react";
 import { GlobalStateContext } from "../GlobalStateContext";
-import { States, NameSpace, User, Snackbar } from "../states";
+import { States, NameSpace } from "../states";
 
 export const useGlobalState = <T extends NameSpace>(
   key: T
