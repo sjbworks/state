@@ -4,7 +4,7 @@ import { GlobalStateProvider, useGlobalState } from "./state";
 
 function App() {
   const [snackbar, dispatch] = useGlobalState("snackbar");
-  dispatch({ isError: false, message: "yay" }, "snackbar");
+  dispatch({ isError: false, message: "yay" });
   console.log(dispatch);
   console.log(snackbar);
 

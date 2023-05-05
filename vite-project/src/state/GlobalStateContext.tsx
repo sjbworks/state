@@ -12,15 +12,13 @@ type GlobalState = {
   [K in NameSpace]: States[K]["state"];
 };
 
-const initialState: GlobalStateWithDispatch = {
-  snackbar: { message: "", isError: false },
-  user: { id: "", name: "", email: "" },
-  dispatch: () => {},
-};
+// const initialState: GlobalStateWithDispatch = {
+//   snackbar: { message: "", isError: false },
+//   user: { id: "", name: "", email: "" },
+//   dispatch: () => {},
+// };
 
 export type GlobalStateWithDispatch = GlobalState & {
   dispatch: Dispatch<Snackbar | User>;
 };
-export const GlobalStateContext = createContext(
-  initialState as GlobalStateWithDispatch
-);
+export const GlobalStateContext = createContext({} as GlobalStateWithDispatch);

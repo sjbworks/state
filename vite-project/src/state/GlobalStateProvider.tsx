@@ -19,17 +19,18 @@ const reducers = {
   user: user.reducer,
 };
 
-// function combineReducers<M extends ReducersMapObject<any, any>>(
-//   reducers: M
-// ): ReducerFromReducersMapObject<M> {
-//   return (state, action) => {
-//     return Object.keys(reducers).reduce((nextState, key) => {
-//       const reducer = reducers[key as keyof M];
-//       nextState[key as keyof M] = reducer(state[key as keyof M], action);
-//       return nextState;
-//     }, {} as { [K in keyof M]: ReturnType<M[K]> });
-//   };
-// }
+function combineReducers<M extends ReducersMapObject<any, any>>(
+  reducers: M
+): ReducerFromReducersMapObject<M> {
+  return (state, action) => {
+    return Object.keys(reducers).reduce((nextState, key) => {
+      const reducer = reducers[key as keyof M];
+      nextState[key as keyof M] = reducer(state[key as keyof M], action);
+      console.log(nextState);
+      return nextState;
+    }, {} as { [K in keyof M]: ReturnType<M[K]> });
+  };
+}
 
 // const createReducer = <T extends TReducer>(
 //   modules: TModules<T>
@@ -46,6 +47,10 @@ const reducers = {
 //     return updater ? updater(state, payload) : state;
 //   };
 // };
+
+const createReducer = <T extends NameSpace>(state: States[T], action: T) => {
+  reducers[action](state);
+};
 
 type GlobalState = {
   [K in NameSpace]: States[K]["state"];
@@ -64,13 +69,9 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
   children,
 }: GlobalStateProviderProps) => {
   const [state, dispatch] = useReducer(combineReducers(reducers), initialState);
-  // console.log(combineReducers(reducers));
-  // console.log(state, dispatch);
 
   return (
-    <GlobalStateContext.Provider
-      value={{ ...state, dispatch } as GlobalStateWithDispatch}
-    >
+    <GlobalStateContext.Provider value={{ ...state, dispatch }}>
       {children}
     </GlobalStateContext.Provider>
   );
