@@ -49,7 +49,7 @@ function combineReducers<M extends ReducersMapObject<any, any>>(
 // };
 
 const createReducer = <T extends NameSpace>(state: States[T], action: T) => {
-  reducers[action](state);
+  reducers[action](state, action);
 };
 
 type GlobalState = {
