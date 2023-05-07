@@ -1,6 +1,14 @@
 import { useReducer, Dispatch } from "react";
 import { GlobalStateContext, Action, AnyAction } from "./GlobalStateContext";
-import { snackbar, user, states, States, NameSpace } from "./states";
+import {
+  snackbar,
+  user,
+  states,
+  States,
+  NameSpace,
+  Snackbar,
+  User,
+} from "./states";
 import { GlobalStateWithDispatch } from "./GlobalStateContext";
 
 type Reducer<S, A> = (state: S, action: A) => S;
@@ -48,8 +56,17 @@ function combineReducers<M extends ReducersMapObject<any, any>>(
 //   };
 // };
 
-const createReducer = <T extends NameSpace>(state: States[T], action: T) => {
-  reducers[action](state, action);
+const reducer = (state: User | Snackbar, action) => {
+  switch (action.type) {
+    case "user": {
+      return {
+        id: state?.id,
+        name: state?.name,
+        age: state?.email,
+      };
+    }
+  }
+  throw Error("Unknown action: " + action.type);
 };
 
 type GlobalState = {
