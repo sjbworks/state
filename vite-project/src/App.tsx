@@ -1,17 +1,16 @@
 import React from "react";
 import "./App.css";
-import { GlobalStateProvider, useGlobalState } from "./state";
+import { GlobalStateProvider } from "./state";
+import User from "./User";
+import Snackbar from "./Snackbar";
+import UserAndSnackbar from "./UserAndSnackbar";
 
 function App() {
-  const [snackbar, dispatch] = useGlobalState("snackbar");
-  dispatch({ isError: false, message: "yay" });
-  console.log(dispatch);
-  console.log(snackbar);
-
   return (
     <GlobalStateProvider>
-      <div>snackbar.message: {snackbar.message}</div>
-      <div>snackbar.message: {snackbar.message}</div>
+      <User />
+      <Snackbar />
+      <UserAndSnackbar />
     </GlobalStateProvider>
   );
 }
