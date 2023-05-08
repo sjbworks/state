@@ -56,17 +56,16 @@ function combineReducers<M extends ReducersMapObject<any, any>>(
 //   };
 // };
 
-const reducer = (state: User | Snackbar, action) => {
-  switch (action.type) {
-    case "user": {
-      return {
-        id: state?.id,
-        name: state?.name,
-        age: state?.email,
-      };
-    }
-  }
-  throw Error("Unknown action: " + action.type);
+const isUser = (obj: any): obj is User => {
+  return typeof obj.email === "string";
+};
+const isSnackbar = (obj: any): obj is Snackbar => {
+  return typeof obj.message === "string";
+};
+
+const reducer = (state: Snackbar | User, action: any) => {
+  if (isUser(state)) return { ...state };
+  if (isSnackbar(state)) return { ...state };
 };
 
 type GlobalState = {
@@ -85,7 +84,7 @@ type GlobalStateProviderProps = {
 export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
   children,
 }: GlobalStateProviderProps) => {
-  const [state, dispatch] = useReducer(combineReducers(reducers), initialState);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
     <GlobalStateContext.Provider value={{ ...state, dispatch }}>
