@@ -1,12 +1,12 @@
 export type Snackbar = {
-  message: string;
-  isError: boolean;
+  message?: string;
+  isError?: boolean;
 };
 
 export type User = {
-  id: string;
-  name: string;
-  email: string;
+  id?: string;
+  name?: string;
+  email?: string;
 };
 
 export const snackbar = {
@@ -32,9 +32,13 @@ export const user = {
 };
 
 export type States = {
-  snackbar: typeof snackbar;
-  user: typeof user;
+  snackbar: Snackbar;
+  user: User;
 };
 
-export const states: States = { snackbar, user };
-export type NameSpace = "snackbar" | "user";
+export const states: States = {
+  snackbar: snackbar.state,
+  user: user.state,
+};
+
+export type NameSpace = typeof user.namespace | typeof snackbar.namespace;
