@@ -5,7 +5,8 @@ import User from "./User";
 import Snackbar from "./Snackbar";
 import UserAndSnackbar from "./UserAndSnackbar";
 import { Provider } from "react-redux";
-import store from "./reduxStates";
+import { store } from "./reduxStates";
+import Member from "./Member";
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
         <UserAndSnackbar />
       </GlobalStateProvider>
       <Provider store={store}>
-        <App />
+        <Member />
       </Provider>
     </>
   );
