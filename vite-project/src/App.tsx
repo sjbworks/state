@@ -7,6 +7,9 @@ import UserAndSnackbar from "./UserAndSnackbar";
 import { Provider } from "react-redux";
 import { store } from "./reduxStates";
 import Member from "./Member";
+import CharacterInput from "./CharacterInput";
+import CharacterValue from "./CharacterValue";
+import { RecoilRoot } from "recoil";
 
 function App() {
   return (
@@ -19,6 +22,10 @@ function App() {
       <Provider store={store}>
         <Member />
       </Provider>
+      <RecoilRoot>
+        <CharacterInput />
+        <CharacterValue />
+      </RecoilRoot>
     </>
   );
 }
