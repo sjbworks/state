@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import "./App.css";
 import { GlobalStateProvider } from "./state";
 import User from "./User";
@@ -10,6 +10,7 @@ import Member from "./Member";
 import CharacterInput from "./CharacterInput";
 import CharacterValue from "./CharacterValue";
 import { RecoilRoot } from "recoil";
+import { Jotai } from "./Jotai";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <CharacterInput />
         <CharacterValue />
       </RecoilRoot>
+      <Jotai />
     </>
   );
 }
