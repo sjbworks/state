@@ -1,6 +1,6 @@
 import { createMachine, interpret } from "xstate";
 
-const toggleMachine = createMachine({
+export const toggleMachine = createMachine({
   id: "toggle",
   initial: "inactive",
   states: {
@@ -9,6 +9,6 @@ const toggleMachine = createMachine({
   },
 });
 
-const toggleService = interpret(toggleMachine)
+export const toggleService = interpret(toggleMachine)
   .onTransition((state) => console.log(state.value))
   .start();
